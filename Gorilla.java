@@ -133,7 +133,7 @@ public class Gorilla {
 					}
 				}
 				
-				//Calculate the most optimal distance
+				//Calculate the most optimal score based on the BLOSUM matrix
 				int opt = opt(length1 - 1, length2 - 1, organism1.sequence, organism2.sequence);
 				
 				//Print the result
@@ -187,6 +187,7 @@ public class Gorilla {
 		return organism1 + "\n" + organism2;
 	}
 
+	//The bigger the score, the more close the organisms
 	public static int opt(int n, int m, char[] seq1, char[] seq2) {
 		
 		//Base case if n is smaller than 0
