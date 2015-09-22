@@ -125,7 +125,7 @@ public class Gorilla {
 				Organism organism2 = organisms.get(j);
 				int length2 = organism2.sequence.length;
 
-				//Initialize the M array, which will hold the optimal score
+				//Initialize the M, which will hold the optimal score
 				M = new int[length1][length2];
 				for (int k = 0; k < length1; k++) {
 					for (int l = 0; l < length2; l++) {
@@ -146,8 +146,10 @@ public class Gorilla {
 		}
 		
 	}
-	
+
+	//Based on Needleman–Wunsch algorithm
 	public static String printResult(char[] sequence1, char[] sequence2) {
+
 		//Initialize the results
 		String organism1 = "", organism2 = "";
 	
@@ -186,21 +188,34 @@ public class Gorilla {
 	}
 
 	public static int opt(int n, int m, char[] seq1, char[] seq2) {
+		
+		//Base case if n is smaller than 0
 		if (n < 0) {
 			return (m + 1) * costMap.get("A*").intValue();
+		
+		//Base case if m is smaller than 0
 		} else if (m < 0) {
 			return (n + 1) * costMap.get("A*").intValue();
 		}
 
+		//If the M(n,m) was already computed, return it
 		if (M[n][m] != Integer.MIN_VALUE) {
 			return M[n][m];
 		}
 
+		// (i) (m,n) -> M
 		int one = costMap.get(String.valueOf(seq1[n]) + String.valueOf(seq2[m])) + opt(n - 1, m - 1, seq1, seq2);
+		
+		// (ii) The n'th position is not matched
 		int two = costMap.get(String.valueOf(seq1[n]) + "*") + opt(n - 1, m, seq1, seq2);
+		
+		// (iii) The m'th position is not matched
 		int three = costMap.get(seq2[m]+"*") + opt(n, m - 1, seq1, seq2);
 		
+		//Get the maximum score out from the three
 		int max = getMax(one, two, three);
+		
+		//Fill in the optimal score in M and return it
 		M[n][m] = max;
 		return max;
 	}
@@ -237,7 +252,7 @@ class Organism {
 
 class CostMatrix {
 
-	//Populates a HashMap with all possible combinations, for faster algorithm times
+	//Populates a HashMap with all possible combinations, for faster request calls later on
 	public static HashMap<String, Integer> generateCostMap(){
 		HashMap<String, Integer> costMap = new HashMap<String, Integer>();
 		
